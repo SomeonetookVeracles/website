@@ -1,0 +1,25 @@
+services:
+  react-app:
+    build: .
+    container_name: react-certbot-apache-app
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Persist certificates
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    environment:
+      - DOMAIN=veracles.xyz  # Replace with your actual domain
+      - EMAIL=tallerthanthou321@gmail.com  # Replace with your email
+      - STAGING=1  # Set to 1 for testing, 0 for production certificates
+    restart: unless-stopped
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
